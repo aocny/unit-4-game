@@ -14,14 +14,21 @@
     <style type="text/css">
 
         .crystal-image {
-          width: 300px;
-          height: 300px;
-        }
+          width: 200px;
+          height: 200px;
+          margin: 10px;
+      }
+      .scorelabel {
+          margin-top: 10px;
+      }
+      #container {
+          margin-left: 10px;
+      }
       </style>
 
 </head>
 <body>
-
+<div id="container">
   <h1>Crystal Collector!</h1>
 
 
@@ -59,17 +66,13 @@
   </div>
 
   <div class="scorelabel">
-        <p>Your total score is: <span id="wins"></span></p>
+        <p>Your total score is: <span id="totalscore"></span></p>
   </div> 
 
-  <div class="total">
-        <p> Total So Far: <span id="0"></span></p>
-      
   </div>
+  
 
-  <!-- Note that this div is now empty. We will fill it dynamically -->
-  <div id="crystals">
-    </div>
+ 
   
     <!-- JAVASCRIPT  -->
     <!-- ========================================= -->
@@ -79,61 +82,31 @@
   
      
       // // Generate a random number between 19 and 120.
-     var randomNumber = Math.floor(Math.random()* 120 - 19 + 1) + 1; 
+     var randomNumber =Math.floor(Math.random()* 120) + 19; 
 
-     // Create a string which will hold the random number
-     var targetNumber = "";
+     // Create a string which will hold wins and losses
+     var wins = 0;
+     var losses = 0;
+     var counter = 0;
 
      // ... and then dump the random number into our random-number div.
       $("#number-to-guess").text(randomNumber);
+      $("#wins").text(wins);
+      $("#losses").text(losses);
+      $("#totalscore").text(counter);
   
-     var counter = 0;
+     
 
      //$(document).ready(function() {
 
-
-      // var numberOptions = 4;
-        // var min = 1;
-         //var max = 12;
-       // var a = new Array();
-        //while (a.length < numberOptions) {
-           // var n = Math.floor(Math.random() * (max - min) + 0.5) + min;
-            //if (a.indexOf(n) == -1) {
-             //  a.push(n);
-          //  }
-
-     // $(function() {
-    //var newArray = [];
-    //for(var i = 0; i < numberOptions.length; i++) {
-       // var numberOptions = Math.floor(Math.random()*12)+1;
-        //arr.push([numberOptions]);
-   // }
-     //});
-
-      // create a for loop for each crystal and assign a random number between 1 and 12.
-      // This number should not repeat and be picked multiple times.
-
-    //  while (numOptions.length < 4) {
-    // var rand = Math.floor(Math.random() * 12) + 1;
-    //   console.log(rand);
-    //  if (numOptions.indexOf(rand) === -1) {
-    //     numOptions.push(rand);
-    //  } else {
-    //      continue;
-    // }
-    // }
-    //   return numOptions;
-    // }
-
-  
-    // We begin by expanding our array to include four options.
-//var numberOptions = ["","","",""];
   
     // Next we create a for loop to create crystals for every numberOption.
       for (var i = 0; i < 4; i++) {
+        
 
         // To assign multiple crystals their own random number value between 1 and 12.
-     var numberOptions = Math.floor(Math.random()* 12 - 1 + 1) + 1; 
+      var numberOptions = Math.floor(Math.random()* 12) + 1; 
+      
   
       // For each iteration, we will create an imageCrystal
       var imageCrystal = $("<img>");
@@ -147,10 +120,11 @@
   
       // Each imageCrystal will be given a data attribute called data-crystalValue.
       // This data attribute will be set equal to the array value.
-      imageCrystal.attr("data-crystalvalue", numberOptions);
+      imageCrystal.attr("data-crystalvalue", numberOptions).attr("class","crystal-image");
   
       // Lastly, each crystal image (with all it classes and attributes) will get added to the page.
       $("#crystals").append(imageCrystal);
+      console.log (numberOptions)
     }
   
     // This time, our click event applies to every single crystal on the page. Not just one.
@@ -163,20 +137,32 @@
   
       var crystalValue = ($(this).attr("data-crystalvalue"));
       crystalValue = parseInt(crystalValue);
+      console.log (crystalValue);
       // We then add the crystalValue to the user's "counter" which is a global variable.
       // Every click, from every crystal adds to the global counter.
       counter += crystalValue;
+      console.log (counter);
+      $("#totalscore").text(counter);
   
       // All of the same game win-lose logic applies. So the rest remains unchanged.
-      alert("New score: " + counter);
+     
+      if (counter === randomNumber) {
+         wins ++;
+         $("#wins").text(wins);
+          randomNumber =Math.floor(Math.random()* 120) + 19;
+          $("#number-to-guess").text(randomNumber);
+          counter = 0  
+          $("#totalscore").text(counter);
+       }
   
-      if (counter === targetNumber) {
-        alert("You win!");
-      }
-  
-      else if (counter >= targetNumber) {
-        alert("You lose!!");
-      }
+      else if (counter > randomNumber) {
+        losses ++;
+        $("#losses").text(losses);
+        randomNumber = Math.floor(Math.random()* 120) + 19;
+        $("#number-to-guess").text(randomNumber);
+        counter = 0 
+        $("#totalscore").text(counter);
+       }
   
     });
   
@@ -187,10 +173,3 @@
 
   
 
-<!-- Link to the jQuery Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- JavaScript -->
-<script src="assets/javascript/game.js"></script>
-
-</body>
-</html>
